@@ -55,6 +55,23 @@ public:
         _PrevOrder(root->_right);
     }
 
+    // 非递归前序遍历
+    void PrevOrder_NonR() {
+        stack<Node*> s;
+        Node* cur=_root;
+        while ( cur || !s.empty()) {
+            if (cur) { //先将左子树遍历输出后压栈
+                cout<<cur->_data <<" ";
+                s.push(cur);
+                cur=cur->_left;
+            } else { // 当左子树为空时开始访问右子树
+                cur=s.top ();
+                s.pop();
+                cur=cur->_right;
+            }
+        }
+    };
+
     //递归中序遍历二叉树
     void InOrder(){
         _InOrder(_root);
@@ -67,6 +84,77 @@ public:
         _InOrder(root->_left );
         cout<<root->_data <<" ";
         _InOrder(root->_right );
+    }
+
+    // 非递归中序遍历
+    void InOrder_NonR() {
+        Node* cur=_root;
+        stack<Node*> s;
+        while ( cur || !s.empty()) { // cur非空或者栈非空
+            if(cur) {
+                s.push(cur);//根节点进栈遍历左子书树
+                cur=cur->_left;
+            } else {
+                Node* top=s.top();
+                cout<<top->_data<<" ";
+                s.pop();
+                cur=top->_right;
+            }
+        }
+        cout<<endl;
+    }
+
+    // 递归后续遍历
+    void PostOrder() {
+        _PostOrder(_root);
+    }
+
+    void _PostOrder(Node* root) {
+        if (root!=NULL) {
+            _PostOrder(root->_left);
+            _PostOrder(root->_right);
+            cout<<root->_data<<" ";
+        }
+    }
+
+    // 非递归后序遍历
+    void PostOrder_NonR() {
+        stack<Node*> s;
+        Node* cur =_root;
+        Node* prev = NULL;//设置标志域
+        s.push(_root);
+        while(!s.empty()) {
+            cur=s.top();
+            if((cur->_left ==NULL&&cur->_right ==NULL)
+               ||(prev!=NULL&&(prev==cur->_left ||prev ==cur->_right ))) {
+                cout<<cur->_data<<" ";
+                prev=cur;
+                s.pop();
+            } else {
+                if(cur->_right!=NULL)
+                    s.push(cur->_right);
+                if(cur->_left!=NULL)
+                    s.push(cur->_left);
+            }
+        }
+    }
+
+    //层序遍历二叉树
+    void Leve1Order() {
+        queue<Node*>q;
+        if(_root!=NULL) {
+            q.push(_root);
+        }
+        while(!q.empty()) {
+            Node* front=q.front();
+            cout<<front->_data <<" ";
+            if(front->_left!=NULL)
+                q.push(front->_left);
+            if(front->_right!=NULL)
+                q.push(front->_right);
+            q.pop();
+        }
+        cout<<endl;
     }
 
     size_t Size() {
@@ -82,6 +170,34 @@ public:
         _Size(root->_right);
         return Ssize;
     }
+
+    //二叉树的深度
+    size_t Depth() {
+        return _Depth(_root);
+    }
+
+    size_t _Depth(Node* root) {
+        if(root==NULL)
+            return 0;
+        size_t left=_Depth(root->_left )+1;
+        size_t right=_Depth(root->_right)+1;
+        return (left>right)?left:right;
+    }
+
+    //递归求二叉树叶子节点的个数
+    size_t LeafSize() {
+        return _LeafSize(_root);
+    }
+
+    //
+    size_t _LeafSize(Node* root) {
+        if(root==NULL)
+            return 0;
+        if(root->_left  ==NULL&&root->_right ==NULL) {
+            return 1;
+        }
+        return _LeafSize(root->_left )+_LeafSize(root->_right );
+    }
 };
 
 TEST(_h001, BinaryTree) {
@@ -91,8 +207,11 @@ TEST(_h001, BinaryTree) {
     cout<<"前序递归遍历：";
     bt.PrevOrder();
     cout<<endl;
+    cout<<"前序非递归遍历：";
+    bt.PrevOrder_NonR();
+    cout<<endl;
 
-    cout<<"前序递归遍历：";
+    cout<<"中序递归遍历：";
     bt.InOrder();
     cout<<endl;
 
