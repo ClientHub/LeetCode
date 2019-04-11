@@ -19,5 +19,6 @@ include_directories(include/)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 aux_source_directory(src/ SOURCE_FILES)
+aux_source_directory(src/structure SOURCE_FILES)
 add_executable(LeetCode ${SOURCE_FILES})
 target_link_libraries(LeetCode gtest gtest_main)
