@@ -92,7 +92,7 @@ public:
         stack<Node*> s;
         while ( cur || !s.empty()) { // cur非空或者栈非空
             if(cur) {
-                s.push(cur);//根节点进栈遍历左子书树
+                s.push(cur);//根节点进栈遍历左子树
                 cur=cur->_left;
             } else {
                 Node* top=s.top();
@@ -138,6 +138,29 @@ public:
             }
         }
     }
+
+    void PostOrder_NonR2() {
+        stack<Node*> s;
+        Node* prev = NULL;
+        Node* cur = _root;
+        while (cur || !s.empty()) {
+            if (cur) {
+                s.push(cur);
+                cur = cur->_left;
+            } else {
+                cur = s.top();
+                if (!cur->_right || cur->_right == prev) {
+                    s.pop();
+                    cout<<cur->_data<<" ";
+                    prev = cur;
+                    cur = 0;
+                    continue;
+                }
+                cur = cur->_right;
+            }
+        }
+    }
+
 
     //层序遍历二叉树
     void Leve1Order() {
@@ -214,6 +237,16 @@ TEST(_h001, BinaryTree) {
     cout<<"中序递归遍历：";
     bt.InOrder();
     cout<<endl;
+
+    cout<<"后序递归遍历：";
+    bt.PostOrder();
+    cout<<endl;
+
+
+    cout<<"后序非递归遍历：";
+    bt.PostOrder_NonR2();
+    cout<<endl;
+
 
     cout<<"二叉树的大小："<<bt.Size()<<endl;
 
